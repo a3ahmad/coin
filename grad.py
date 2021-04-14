@@ -43,6 +43,7 @@ class COIN(pl.LightningModule):
 parser = argparse.ArgumentParser(description='COIN gradient descent implementation')
 parser.add_argument("--hidden", type=int, default=13, help="Number of hidden layers")
 parser.add_argument("--width", type=int, default=49, help="Hidden layer width")
+parser.add_argument("--epochs", type=int, default=50000, help="Number of epochs")
 parser.add_argument('--batch_size', type=int, help='Batch size')
 parser.add_argument('--path', required=True, help='Path of image to compress')
 
@@ -71,7 +72,7 @@ image_dataloader = DataLoader(image_dataset, batch_size=args.batch_size, shuffle
 
 trainer = pl.Trainer(
     gpus=1 if torch.cuda.is_available() else 0,
-    max_epochs=50
+    max_epochs=args.epochs
     )
 trainer.fit(model, image_dataloader)
 
