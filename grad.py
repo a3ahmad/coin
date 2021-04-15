@@ -10,8 +10,10 @@ import torchvision
 import pytorch_lightning as pl
 
 class COIN(pl.LightningModule):
-    def __init__(self, num_hidden_layers, layer_width):
+    def __init__(self, num_hidden_layers, layer_width, lr):
         super().__init__()
+
+        self.lr = lr
 
         self.layers = nn.ModuleList([
             nn.Linear(2, layer_width),
@@ -31,7 +33,7 @@ class COIN(pl.LightningModule):
     def configure_optimizers(self):
         return optim.Adam(
             self.parameters(),
-            lr=2e-4)
+            lr=self.lr)
 
     def training_step(self, train_batch, batch_idx):
         x, y = train_batch
@@ -43,13 +45,14 @@ class COIN(pl.LightningModule):
 parser = argparse.ArgumentParser(description='COIN gradient descent implementation')
 parser.add_argument("--hidden", type=int, default=13, help="Number of hidden layers")
 parser.add_argument("--width", type=int, default=49, help="Hidden layer width")
+parser.add_argument("--lr", type=float, default=2e-3, help="Learning rate")
 parser.add_argument("--epochs", type=int, default=50000, help="Number of epochs")
 parser.add_argument('--batch_size', type=int, help='Batch size')
 parser.add_argument('--path', required=True, help='Path of image to compress')
 
 args = parser.parse_args()
 
-model = COIN(args.hidden, args.width)
+model = COIN(args.hidden, args.width, args.lr)
 
 image = torchvision.transforms.Compose([
     torchvision.transforms.ConvertImageDtype(torch.float),
