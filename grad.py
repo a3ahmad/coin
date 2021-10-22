@@ -104,7 +104,7 @@ class COIN(pl.LightningModule):
             self.parameters(),
             lr=self.lr)
 
-        lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=500, verbose=True)
+        lr_scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=5000, verbose=True)
 
         scheduler = {
             'scheduler': lr_scheduler,
